@@ -1,0 +1,7 @@
+---
+applications:
+  - name: vendorsgate
+    memory: 8G
+    buildpacks:
+      - nodejs_buildpack
+    random-route: true
