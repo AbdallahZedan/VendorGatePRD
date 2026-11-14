@@ -40,3 +40,7 @@ exports.lookLanguageUrl = s4URL + '/sap/opu/odata/sap/ZVENDORS_GATE_GW_SRV/LOOK_
 exports.lookReqDepUrl = s4URL + '/sap/opu/odata/sap/ZVENDORS_GATE_GW_SRV/LOOK_REQ_DEPSet'; 
 
 exports.jwtSecret = '/ETHOwkf7hqD1foaFGQ+czWVUytgL577897*^&f5ktmLKJhJG^OYqpTTnX/aW9McnQdYSyy5/fehWgSCZBJzs9';
+exports.guaranteeHeaderUrl = s4URL + '/sap/opu/odata/sap/ZVENDORS_GATE_GW_SRV/GuaranteeHeaderSet';      // bank guarantee
+exports.guaranteeItemUrl = s4URL + '/sap/opu/odata/sap/ZVENDORS_GATE_GW_SRV/GuaranteeItemSet';          // bank guarantee
+exports.lookBankUrl = s4URL + '/sap/opu/odata/sap/ZVENDORS_GATE_GW_SRV/LOOK_BANKSet';                   // bank guarantee
+exports.lookGuaranteeCategoryUrl = s4URL + '/sap/opu/odata/sap/ZVENDORS_GATE_GW_SRV/LOOK_CATEGORYSet'; // bank guarantee

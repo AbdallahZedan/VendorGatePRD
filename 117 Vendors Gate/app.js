@@ -6,12 +6,14 @@ const authRoues = require('./routes/auth');
 const lookupRoues = require('./routes/lookup');
 const vendorRoues = require('./routes/vendor');
 const poRoues = require('./routes/po');
+const complaintRoute = require('./routes/complaint'); // complaint
+const bankGuaranteeRoute = require('./routes/bankGuarantee'); // bank guarantee
 
 const app = express();
 // const port = process.env.PORT || 3000;
 const port = process.env.PORT;
 
-app.use(express.json({ limit: '5mb' })); //extend file size to be 5mb rather than 100k
+app.use(express.json({ limit: '10mb' })); //extend file size to be 5mb rather than 100k
 
 app.use(bodyParser.json());
 
@@ -29,16 +31,23 @@ app.use('/auth', authRoues);
 app.use('/lookup', lookupRoues);
 app.use('/vendor', vendorRoues);
 app.use('/po', poRoues);
-
+app.use('/complaint', complaintRoute);    // complaint
+app.use('/bankGuarantee', bankGuaranteeRoute) // bank guarantee
 
 //error handling middleware
 app.use((error, req, res, next) => {
-  // console.log(error);
-  const status = error.statusCode || 500;
-  const message = error.message;
-  // res.status(status).json({ message: message });
-  const data = error.data;
-  res.status(status).json({ message: message, data: data });
+    const status = error.statusCode || 500;
+    
+    // Check if error.data is a string (old style) or validation array from express-validator
+    const mainMessage = typeof error.data === 'string' ? error.data : (error.message || 'An error occurred.');
+    const inputValidationErrors = Array.isArray(error.data) ? error.data : [];
+
+    res.status(status).json({
+        success: false,
+        message: mainMessage,                // Returns old string result ("An exception was raised")
+        sapErrorDetails: error.odataErrors,   // Returns new array result ([ { message: "يوجد خطأ..." } ])
+        validationErrors: inputValidationErrors // Handles express-validator if it fails
+    });
 });
 
 
