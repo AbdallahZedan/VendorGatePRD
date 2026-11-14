@@ -194,6 +194,23 @@ module.exports = class Vendor {
             }
         });
     }
+    static postComplaint(complaintData) {
+        return axios({
+            method: "POST",
+            url: config.c4cComplainURL,
+            data: {
+                ...complaintData
+            },
+            auth: {
+                username: config.c4cUser,
+                password: config.c4cPassword
+            }
+            // headers: {
+            //     url: config.vendorAttUrl + `(TaxRegNo='${vendorAttaData.TaxRegNo}',DocumentType='${vendorAttaData.DocumentType}',AttaId='${vendorAttaData.AttaId}')`,
+            //     query: `sap-client=${config.sapClient}`
+            // }
+        });
+    }
     //-----------------------------------------------
 }
 //-----------------------------------------------

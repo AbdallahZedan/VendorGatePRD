@@ -7,23 +7,29 @@ const validator = require('../middleware/validator');
 const router = express.Router();
 
 // GET /lookup/country
-router.get('/country', 
+router.get('/country',
     validator.language,
     lookupController.getCountry);
 
 // GET /lookup/region
-router.get('/region', 
+router.get('/region',
     validator.region,
     lookupController.getRegion);
 
 // GET /lookup/language
-router.get('/language', 
+router.get('/language',
     validator.language,
     lookupController.getLanguage);
 
 // GET /lookup/reqdep
-router.get('/reqdep', 
+router.get('/reqdep',
     validator.language,
     lookupController.getReqDep);
+
+// GET /lookup/bank
+router.get('/bank',
+    lookupController.getBank);
+router.get('/guaranteeCategory',
+    lookupController.getGuaranteeCategory);
 
 module.exports = router;

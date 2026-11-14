@@ -223,7 +223,7 @@ exports.getVendorAttachment = (req, res, next) => {
         attaData.DocId = req.TaxRegNo;
     }
 
-    // console.log(attaData);
+    // console.log(`attachment data: ${attaData}`);
 
     Vendor.getVendorAttachment(attaData)
         .then(response => {
