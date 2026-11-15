@@ -1,4 +1,4 @@
-const { body, query, oneOf } = require('express-validator');
+const { body, query, oneOf, check } = require('express-validator');
 
 //-------------------------------------------- Auth
 exports.pswResetReq = [
