@@ -41,24 +41,42 @@ exports.postLogin = (req, res, next) => {
             }
 
             return Vendor.postPswOtp({ TaxRegNo: taxRegNo, Otp: otp });
-
         }).then(otpresponse => {
-            // console.log(otpresponse.data);
             let RequestExp = '';
-            let data = JSON.parse(convert.xml2json(otpresponse.data, { compact: true, spaces: 4 }));
+            let telephoneNo = '';
 
-            if (data.entry.content['m:properties']['d:RequestExp']._text) {
-                RequestExp = data.entry.content['m:properties']['d:RequestExp']._text;
+            const rawData = otpresponse.data;
+
+            // --- SYSTEM CHECK: IS IT JSON OR XML? ---
+            if (typeof rawData === 'object' || (typeof rawData === 'string' && !rawData.trim().startsWith('<?xml') && !rawData.trim().startsWith('<'))) {
+                // Handle JSON Response (Direct object mapping)
+                const jsonPayload = typeof rawData === 'string' ? JSON.parse(rawData) : rawData;
+                const properties = jsonPayload?.d || jsonPayload;
+
+                RequestExp = properties?.RequestExp || '';
+                telephoneNo = properties?.TelephoneNo || '';
+            } else {
+                // Fallback: Handle original XML Response parsing safely
+                try {
+                    let data = JSON.parse(convert.xml2json(rawData, { compact: true, spaces: 4 }));
+                    if (data?.entry?.content?.['m:properties']?.['d:RequestExp']?._text) {
+                        RequestExp = data.entry.content['m:properties']['d:RequestExp']._text;
+                    }
+                    if (data?.entry?.content?.['m:properties']?.['d:TelephoneNo']?._text) {
+                        telephoneNo = data.entry.content['m:properties']['d:TelephoneNo']._text;
+                    }
+                } catch (xmlParseError) {
+                    console.error("XML Fallback failed, attempting parsing error containment.", xmlParseError);
+                }
             }
 
-            res.status(otpresponse.status).json(
-                {
-                    message: 'Vendor OTP Sent',
-                    RequestExp: RequestExp
-                    // data: convert.xml2js(otpresponse.data, { compact: true, spaces: 4 })
-                }
-            )
+            res.status(otpresponse.status).json({
+                message: 'Vendor OTP Sent',
+                RequestExp: RequestExp,
+                TelephoneNo: telephoneNo
+            });
         })
+
         .catch(err => {
             axiosCatch(err, 'Error login');
             next(err);
